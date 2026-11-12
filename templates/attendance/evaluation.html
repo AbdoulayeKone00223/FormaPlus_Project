@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+{% block title %}Évaluations · {{ session.formation.titre }}{% endblock %}
+{% block content %}
+
+<nav aria-label="breadcrumb" class="mb-3">
+  <a href="{% url 'session_detail' session.pk %}" class="btn btn-sm btn-outline-secondary rounded-pill px-3">
+    <i class="bi bi-arrow-left me-1"></i> Retour à la session
+  </a>
+</nav>
+
+<div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-4">
+  <div>
+    <h1 class="h3 fw-bold mb-1">Évaluation des apprenants</h1>
+    <p class="text-muted small mb-0">
+      <strong>{{ session.formation.titre }}</strong> · Attribuez une note sur 20 (min. 10/20 requis) ou cochez la validation formateur.
+    </p>
+  </div>
+  {% if lignes %}
+  <button type="submit" form="evaluationForm" class="btn btn-primary rounded-pill px-4 shadow-sm">
+    <i class="bi bi-check2-all me-1"></i> Enregistrer les notes
+  </button>
+  {% endif %}
+</div>
+
+<form method="post" id="evaluationForm">
+  {% csrf_token %}
+  <div class="card border-0 shadow-sm">
+    <div class="table-responsive">
+      <table class="table table-hover mb-0 align-middle">
+        <thead>
+          <tr>
+            <th class="ps-4">Apprenant</th>
+            <th style="width: 130px;" class="text-center">Note / 20</th>
+            <th>Observations & Commentaires</th>
+            <th class="text-center" style="width: 160px;">Validation Directe</th>
+          </tr>
+        </thead>
+        <tbody>
+        {% for l in lignes %}
+          <tr>
+            <td class="ps-4 fw-semibold text-dark">
+              <i class="bi bi-person-circle text-secondary me-2"></i>{{ l.inscription.apprenant.nom }}
+            </td>
+            <td>
+              <div class="input-group input-group-sm">
+                <input type="text" inputmode="decimal" name="note_{{ l.inscription.pk }}" class="form-control text-center fw-bold rounded-start-pill" value="{% if l.evaluation.note is not None %}{{ l.evaluation.note|stringformat:'s' }}{% endif %}" placeholder="Ex: 14" aria-label="Note de {{ l.inscription.apprenant.nom }}">
+                <span class="input-group-text rounded-end-pill text-muted">/20</span>
+              </div>
+            </td>
+            <td>
+              <input type="text" name="commentaire_{{ l.inscription.pk }}" class="form-control form-control-sm rounded-pill" value="{{ l.evaluation.commentaire|default:'' }}" placeholder="Appréciation générale...">
+            </td>
+            <td class="text-center">
+              <div class="form-check form-switch d-inline-block">
+                <input type="checkbox" class="form-check-input" name="valide_{{ l.inscription.pk }}" {% if l.evaluation.valide_par_formateur %}checked{% endif %} id="val_{{ l.inscription.pk }}">
+                <label class="form-check-label small fw-semibold" for="val_{{ l.inscription.pk }}">Validé</label>
+              </div>
+            </td>
+          </tr>
+        {% empty %}
+          <tr>
+            <td colspan="4" class="text-center py-5 text-muted">
+              <i class="bi bi-people fs-2 d-block mb-2 text-secondary"></i>
+              Aucun apprenant n'est inscrit à cette session.
+            </td>
+          </tr>
+        {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  {% if lignes %}
+  <div class="d-flex justify-content-end mt-4">
+    <button type="submit" class="btn btn-primary rounded-pill px-4 shadow-sm">
+      <i class="bi bi-check2-all me-1"></i> Enregistrer les notes
+    </button>
+  </div>
+  {% endif %}
+</form>
+{% endblock %}

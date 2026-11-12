@@ -1,0 +1,118 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Connexion & Démo rapide{% endblock %}
+{% block content %}
+
+<div class="row justify-content-center my-2">
+  <div class="col-12 col-xl-10">
+
+    <!-- En-tête accrocheur -->
+    <div class="text-center mb-4">
+      <img src="{% static 'img/logo.svg' %}" alt="FormaPlus" height="48" class="mb-2">
+      <h1 class="h3 fw-bold mb-1">Centre de Formation Professionnelle & Certification</h1>
+      <p class="text-muted">Explorez l'expérience FormaPlus en sélectionnant un profil de test ou connectez-vous ci-dessous.</p>
+    </div>
+
+    <!-- 1. CARTES D'ACCÈS DÉMO EN 1 CLIC (MISES EN AVANT DÈS LE DÉPART) -->
+    <div class="card border-0 shadow-sm p-4 mb-4 bg-white">
+      <div class="d-flex align-items-center justify-content-between flex-wrap gap-2 mb-3">
+        <div>
+          <span class="badge bg-primary-subtle text-primary fw-bold text-uppercase px-2 py-1 small">
+            <i class="bi bi-lightning-charge-fill me-1"></i> Accès Démo Immédiat
+          </span>
+          <h2 class="h5 fw-bold mt-2 mb-0">Choisissez un rôle pour tester sans saisir d'identifiant</h2>
+        </div>
+        <span class="text-muted small"><i class="bi bi-shield-check text-success me-1"></i>Données de démonstration prêtes</span>
+      </div>
+
+      <div class="row g-3">
+        <!-- Rôle Apprenant -->
+        <div class="col-md-4">
+          <div class="card h-100 card-hover border p-3 d-flex flex-column justify-content-between" style="border-radius: 12px; background: #F8FAFC;">
+            <div>
+              <div class="d-flex justify-content-between align-items-start mb-2">
+                <div class="p-2 rounded-3 bg-info-subtle text-info fs-4">
+                  <i class="bi bi-mortarboard-fill"></i>
+                </div>
+                <span class="badge bg-light text-dark border">Apprenant</span>
+              </div>
+              <h3 class="h6 fw-bold mb-1">Alice Diallo</h3>
+              <p class="small text-muted mb-3">
+                Suivez votre assiduité en temps réel, consultez vos notes et téléchargez votre <strong>attestation PDF</strong> officielle avec célébration.
+              </p>
+            </div>
+            <a class="btn btn-outline-info rounded-pill w-100 fw-bold justify-content-center" href="{% url 'demo_login' 'apprenant' %}">
+              Tester en tant qu'Apprenant <i class="bi bi-arrow-right small ms-1"></i>
+            </a>
+          </div>
+        </div>
+
+        <!-- Rôle Formateur -->
+        <div class="col-md-4">
+          <div class="card h-100 card-hover border p-3 d-flex flex-column justify-content-between" style="border-radius: 12px; background: #F8FAFC;">
+            <div>
+              <div class="d-flex justify-content-between align-items-start mb-2">
+                <div class="p-2 rounded-3 bg-primary-subtle text-primary fs-4">
+                  <i class="bi bi-person-workspace"></i>
+                </div>
+                <span class="badge bg-light text-dark border">Formateur</span>
+              </div>
+              <h3 class="h6 fw-bold mb-1">Moussa Traoré</h3>
+              <p class="small text-muted mb-3">
+                Gérez vos sessions attribuées, remplissez la <strong>feuille d'émargement interactive</strong> et notez les participants.
+              </p>
+            </div>
+            <a class="btn btn-outline-primary rounded-pill w-100 fw-bold justify-content-center" href="{% url 'demo_login' 'formateur' %}">
+              Tester en tant que Formateur <i class="bi bi-arrow-right small ms-1"></i>
+            </a>
+          </div>
+        </div>
+
+        <!-- Rôle Administrateur -->
+        <div class="col-md-4">
+          <div class="card h-100 card-hover border p-3 d-flex flex-column justify-content-between" style="border-radius: 12px; background: #F8FAFC;">
+            <div>
+              <div class="d-flex justify-content-between align-items-start mb-2">
+                <div class="p-2 rounded-3 bg-warning-subtle text-warning fs-4">
+                  <i class="bi bi-shield-lock-fill"></i>
+                </div>
+                <span class="badge bg-light text-dark border">Admin</span>
+              </div>
+              <h3 class="h6 fw-bold mb-1">Administrateur</h3>
+              <p class="small text-muted mb-3">
+                Vision globale du centre : indicateurs clés, encaissement des paiements, création de sessions et catalogue.
+              </p>
+            </div>
+            <a class="btn btn-outline-warning rounded-pill w-100 fw-bold justify-content-center text-dark" href="{% url 'demo_login' 'admin' %}">
+              Tester en tant qu'Admin <i class="bi bi-arrow-right small ms-1"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2. FORMULAIRE CLASSIQUE (CONNEXION MANUELLE) -->
+    <div class="card border-0 shadow-sm p-4 bg-white mx-auto" style="max-width: 520px;">
+      <div class="text-center mb-3">
+        <h2 class="h6 fw-bold text-uppercase tracking-wider text-muted mb-1">Ou connexion avec un compte existant</h2>
+        <p class="small text-muted mb-0">Entrez votre adresse e-mail et votre mot de passe</p>
+      </div>
+
+      <form method="post" novalidate>
+        {% csrf_token %}
+        {% include "includes/form_fields.html" %}
+        <input type="hidden" name="next" value="{{ next }}">
+        <button type="submit" class="btn btn-primary w-100 rounded-pill py-2 shadow-sm justify-content-center mt-3">
+          <i class="bi bi-box-arrow-in-right me-1"></i> Se connecter
+        </button>
+      </form>
+
+      <div class="text-center small mt-3 pt-3 border-top">
+        <span class="text-muted">Vous êtes nouveau ?</span>
+        <a class="fw-semibold text-primary text-decoration-none ms-1" href="{% url 'register' %}">Créer un compte apprenant / formateur</a>
+      </div>
+    </div>
+
+  </div>
+</div>
+{% endblock %}

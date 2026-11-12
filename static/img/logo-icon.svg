@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40" width="40" height="40" fill="none">
+  <defs>
+    <linearGradient id="fpGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#4F46E5" />
+      <stop offset="100%" stop-color="#06B6D4" />
+    </linearGradient>
+    <linearGradient id="plusGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#38BDF8" />
+      <stop offset="100%" stop-color="#F43F5E" />
+    </linearGradient>
+    <filter id="shadow" x="-10%" y="-10%" width="130%" height="130%">
+      <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#4F46E5" flood-opacity="0.35"/>
+    </filter>
+  </defs>
+  <!-- Background squircle -->
+  <rect x="2" y="2" width="36" height="36" rx="10" fill="url(#fpGrad)" filter="url(#shadow)"/>
+  
+  <!-- Stylized F + Academic Cap motif -->
+  <path d="M11 12H23C24.1 12 25 12.9 25 14C25 15.1 24.1 16 23 16H16V19H21C22.1 19 23 19.9 23 21C23 22.1 22.1 23 21 23H16V28C16 29.1 15.1 30 14 30C12.9 30 12 29.1 12 28V13C12 12.45 12.45 12 13 12H11Z" fill="#FFFFFF"/>
+  
+  <!-- Glowing Plus Badge -->
+  <circle cx="27" cy="25" r="7" fill="#0F172A" />
+  <circle cx="27" cy="25" r="6" fill="#10B981" />
+  <path d="M27 21.5V28.5M23.5 25H30.5" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round"/>
+</svg>
+

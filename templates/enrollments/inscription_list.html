@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+{% block title %}Inscriptions & Règlements{% endblock %}
+{% block content %}
+
+<div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-4">
+  <div>
+    <h1 class="h3 fw-bold mb-1">Inscriptions & Règlements</h1>
+    <p class="text-muted small mb-0">Suivez l'état des encaissements et la validation financière des inscriptions.</p>
+  </div>
+</div>
+
+<form method="get" class="row g-2 mb-4">
+  <div class="col-md-5">
+    <div class="input-group">
+      <span class="input-group-text bg-white border-end-0 text-muted"><i class="bi bi-filter"></i></span>
+      <select name="session" class="form-select border-start-0 ps-0" onchange="this.form.submit()">
+        <option value="">Filtrer par session (Toutes les sessions)</option>
+        {% for s in sessions %}
+        <option value="{{ s.pk }}" {% if session_id == s.pk|stringformat:"s" %}selected{% endif %}>
+          {{ s.formation.titre }} ({{ s.date_debut|date:"d/m/Y" }})
+        </option>
+        {% endfor %}
+      </select>
+    </div>
+  </div>
+</form>
+
+<div class="card border-0 shadow-sm">
+  <div class="table-responsive">
+    <table class="table table-hover mb-0 align-middle">
+      <thead>
+        <tr>
+          <th class="ps-4">Apprenant</th>
+          <th>Session</th>
+          <th>Statut</th>
+          <th>Montant Réglé</th>
+          <th>Reste à Percevoir</th>
+          <th class="text-end pe-4">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+      {% for i in inscriptions %}
+        <tr>
+          <td class="ps-4 fw-semibold text-dark">
+            <i class="bi bi-person-circle text-secondary me-2"></i>{{ i.apprenant.nom }}
+          </td>
+          <td>
+            <div class="fw-bold text-dark">{{ i.session.formation.titre }}</div>
+            <div class="small text-muted"><i class="bi bi-calendar3 me-1"></i>{{ i.session.date_debut|date:"d/m/Y" }}</div>
+          </td>
+          <td>
+            <span class="badge {% if i.statut == 'confirmee' %}bg-success{% elif i.statut == 'annulee' %}bg-danger{% else %}bg-secondary{% endif %}">
+              {{ i.get_statut_display }}
+            </span>
+          </td>
+          <td class="fw-bold text-dark">
+            {{ i.total_paye|floatformat:0 }} {{ devise }}
+          </td>
+          <td>
+            {% if i.est_payee %}
+              <span class="badge bg-success p-1 px-2 rounded-pill">
+                <i class="bi bi-check-all me-1"></i> Soldé
+              </span>
+            {% else %}
+              <span class="fw-bold text-danger">{{ i.reste_a_payer|floatformat:0 }} {{ devise }}</span>
+            {% endif %}
+          </td>
+          <td class="text-end pe-4">
+            <a class="btn btn-sm btn-outline-primary rounded-pill px-3 me-1" href="{% url 'paiement_create' i.pk %}">
+              <i class="bi bi-cash-coin me-1"></i> Encaisser
+            </a>
+            {% if i.statut != 'annulee' %}
+            <form method="post" action="{% url 'cancel_enrollment' i.pk %}" class="d-inline" onsubmit="return confirm('Êtes-vous sûr de vouloir annuler cette inscription ?');">
+              {% csrf_token %}
+              <button class="btn btn-sm btn-outline-danger rounded-pill px-3" type="submit">
+                Annuler
+              </button>
+            </form>
+            {% endif %}
+          </td>
+        </tr>
+      {% empty %}
+        <tr>
+          <td colspan="6" class="text-center py-5 text-muted">
+            <i class="bi bi-inbox fs-2 d-block mb-2 text-secondary"></i>
+            Aucune inscription trouvée pour ce filtre.
+          </td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}
